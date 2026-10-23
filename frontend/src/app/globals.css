@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-aspal: #1d2b33;
+  --color-aspal-lembut: #2d404b;
+  --color-beton: #eef0ec;
+  --color-marka: #f2c230;
+  --color-marka-tua: #dcab14;
+  --color-garis: #66767f;
+  --color-rambu: #1f7a4d;
+  --color-rem: #b3261e;
+  --font-sans: "Figtree Variable", system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-beton);
+  color: var(--color-aspal);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-aspal);
+  outline-offset: 2px;
+}
+
+/* Marka jalan putus-putus: pemisah panel merek dan formulir */
+.marka-h {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-marka) 0 28px,
+    transparent 28px 48px
+  );
+}
+.marka-v {
+  width: 6px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--color-marka) 0 28px,
+    transparent 28px 48px
+  );
+}
