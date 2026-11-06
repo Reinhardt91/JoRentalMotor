@@ -1,0 +1,36 @@
+
+[1] Siapkan satu kasus LUNAS_PERLU_TINDAKAN (sewa diakhiri, lalu pembayaran perpanjangan masuk)
+  OK    kasus bermasalah terbentuk
+
+[2] Tinjau perpanjangan bermasalah
+  OK    muncul di daftar, lengkap dengan order_id dan nominal yang sudah dibayar
+  OK    alasan sistem tampil: "Sewa sudah diakhiri sebelum pembayaran diterima"
+  OK    pelanggan tidak boleh membuka -> 403
+  OK    tanpa catatan -> 400
+  OK    catat penanganan -> 200
+  OK    status DITANGANI, admin dan waktu penanganan tercatat
+  OK    catatan admin disimpan bersama alasan sistem
+  OK    ditangani dua kali -> 409
+  OK    hilang dari daftar yang perlu tindakan
+  OK    tampil di riwayat yang sudah ditangani
+
+[3] Kelola armada: tipe motor
+  OK    tambah tipe -> 201
+  OK    tipe ganda -> 409
+  OK    data tipe tidak valid -> 400
+  OK    ubah harga harian -> 200
+  OK    pelanggan -> 403
+
+[4] Kelola armada: unit motor
+  OK    tambah unit, plat dirapikan menjadi "DB 2001 JR"
+  OK    plat ganda -> 409
+  OK    format plat salah -> 400
+  OK    unit baru langsung tampil tersedia bagi pelanggan dengan harga baru
+  OK    ubah ke PERBAIKAN tanpa jadwal -> tanpa peringatan
+  OK    pelanggan melihatnya "Dalam perbaikan"
+  OK    unit perbaikan tidak bisa dipesan -> 409
+  OK    ubah kondisi saat ada reservasi -> peringatan: "Unit ini masih memiliki 1 reservasi aktif atau mendatang. Hubungi pelanggan terkait atau alihkan ke unit lain."
+  OK    kondisi tidak valid -> 400
+  OK    ringkasan armada: jumlah unit per tipe dan reservasi mendatang
+
+=== SEMUA LULUS ===
