@@ -1,0 +1,50 @@
+
+[1] Estimasi biaya pada daftar motor (periode 3 hari dan 8 hari, DB 1002 Beat 75rb/hari, 450rb/minggu)
+  OK    3 hari = Rp225.000 (dapat 3 hari, 225000)
+  OK    periode memuat jam ambil/kembali
+  OK    8 hari = 1 minggu 450rb + 1 hari 75rb = Rp525.000 (dapat 525000)
+
+[2] Booking valid
+  OK    201, status MENUNGGU, total 225000 (dapat 201 225000)
+  OK    waktu WITA 2026-11-30 09:00:00 s/d 2026-12-03 17:00:00
+
+[3] Penolakan
+  OK    unit & periode bertabrakan -> 409 (409) "Motor ini sudah dipesan atau disewa pada tanggal tersebut. Pilih tanggal atau motor lain."
+  OK    mulai tanggal 23 pukul 09.00 padahal unit baru kembali tanggal 23 pukul 17.00 -> 409 (409)
+  OK    mulai tanggal 24 (hari berikutnya) -> 201 (201)
+  OK    motor perbaikan -> 409 (409)
+  OK    tanggal ambil kemarin -> 400 (400)
+  OK    kembali sebelum ambil -> 400 (400)
+  OK    lebih dari 60 hari -> 400 (400)
+  OK    ANTAR tanpa lokasi -> 400 (400)
+  OK    motor tidak ada -> 404 (404)
+  OK    admin tidak boleh memesan -> 403 (403)
+  OK    tanpa token -> 401 (401)
+  OK    ANTAR dengan lokasi -> 201 (201)
+
+[4] PARALEL: 10 pelanggan memesan unit & periode yang sama bersamaan (DB 1005, hari +40..+43)
+  OK    hasil: 1x201, 9x409 (harus 1 dan 9)
+  OK    baris tersimpan = 1
+
+[5] Reservasi saya, batal, dan kepemilikan
+  OK    pelanggan 1 melihat reservasi baru dan sewa aktifnya (2 baris)
+  OK    tanggal berupa teks WITA
+  OK    pelanggan lain membatalkan punya orang -> 404 (404)
+  OK    pemilik membatalkan -> 200 (200)
+  OK    batal dua kali -> 409 (409)
+  OK    setelah dibatalkan, jadwal dilepas dan bisa dipesan lagi -> 201 (201)
+
+[6] Admin kelola reservasi
+  OK    pelanggan membuka rute admin -> 403 (403)
+  OK    admin melihat daftar menunggu (5) lengkap dengan nama pelanggan
+  OK    status tidak valid -> 400 (400)
+  OK    konfirmasi -> 200 (200)
+  OK    konfirmasi dua kali -> 409 (409)
+  OK    membatalkan reservasi yang sudah jadi sewa -> 409 (409)
+  OK    batalkan reservasi terkonfirmasi tanpa sewa -> 200 (200)
+  OK    ID tidak ada -> 404 (404)
+
+[7] Daftar motor menyesuaikan jadwal baru (DB 1002 dipesan hari +20..+22)
+  OK    status DIPESAN, tersedia=false
+
+=== SEMUA LULUS ===

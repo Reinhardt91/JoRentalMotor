@@ -1,0 +1,17 @@
+
+[1] Info perpanjangan sewa demo (jatuh tempo besok 17.00, reservasi pelanggan lain mulai +4 hari 09.00)
+  OK    batas maksimal = 2 hari (dapat 2)
+  OK    belum ada pengajuan, harga harian 75.000
+  OK    pelanggan lain tidak bisa melihat sewa ini -> 404
+
+[2] Penolakan
+  OK    tambahan 3 hari melewati reservasi berikutnya -> 409
+  OK    tambahan 0 hari -> 400
+  OK    tambahan bukan angka -> 400
+  OK    pelanggan lain memperpanjang sewa orang -> 404
+
+[3] PARALEL: 5 permintaan perpanjangan bersamaan dari pelanggan yang sama (klik ganda / beberapa tab)
+  GAGAL hasil: [502,502,409,502,409] (harus satu 201, empat 409)
+galat uji: TypeError: Cannot read properties of undefined (reading 'd')
+    at D:\JoRentalMotor\backend\tests\alur-perpanjangan.js:38:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

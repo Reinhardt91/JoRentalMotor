@@ -32,6 +32,7 @@ const SUITES = [
   { nama: 'alur-admin-tambahan',  rumusan: '3',     judul: 'Perpanjangan bermasalah dan kelola armada' },
   { nama: 'alur-pengirim',        rumusan: '4',     judul: 'Antrean WhatsApp, percobaan ulang (mode simulasi)' },
   { nama: 'alur-pengingat',       rumusan: '4',     judul: 'Pengingat H-1/H-0, pemulihan jadwal, TERLAMBAT' },
+  { nama: 'alur-notifikasi',      rumusan: '4',     judul: 'Log notifikasi gagal dan ringkasan pengiriman' },
 ];
 
 if (!argv.includes('--yes')) {
@@ -91,8 +92,17 @@ async function nyalakanBackend() {
   p.kill(); throw new Error('Backend tidak menyala di port ' + PORT + '. Lihat backend.log di ' + FOLDER);
 }
 async function nyalakanTiruan() {
-  const p = spawn(process.execPath, ['tests/midtrans-tiruan.js'], { cwd: ROOT, env: ENV_UJI, windowsHide: true });
-  await tunggu(800); return p;
+  const berkas = path.join(ROOT, 'tests', 'midtrans-tiruan.js');
+  if (!fs.existsSync(berkas)) throw new Error('Berkas tests/midtrans-tiruan.js tidak ditemukan. Mode --tiruan membutuhkan berkas itu.');
+  const p = spawn(process.execPath, [berkas], { cwd: ROOT, env: ENV_UJI, windowsHide: true });
+  let pesanGalat = '';
+  p.stderr.on('data', (d) => { pesanGalat += d.toString(); });
+  for (let i = 0; i < 20; i++) {
+    try { if ((await fetch('http://localhost:4010/uji/log')).ok) return p; } catch {}
+    await tunggu(250);
+  }
+  p.kill();
+  throw new Error('Server Midtrans tiruan tidak menyala di port 4010.' + (pesanGalat ? ' Pesan: ' + pesanGalat.trim().split('\n')[0] : ' Mungkin port 4010 sedang dipakai program lain.'));
 }
 
 (async () => {

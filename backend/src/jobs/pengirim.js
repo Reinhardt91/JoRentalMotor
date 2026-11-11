@@ -8,8 +8,16 @@ const MAKS_PERCOBAAN = 3;
 const JEDA_ULANG_MENIT = 15;
 const tunggu = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Jeda antarpesan dari WA_JEDA_ANTAR_PESAN_MS: angka tetap ("3000") atau rentang acak ("5000-10000").
+// Bawaan 5 sampai 10 detik acak, agar pola pengiriman tidak seragam.
+function jedaAntarPesan() {
+  const [a, b] = String(process.env.WA_JEDA_ANTAR_PESAN_MS ?? '5000-10000').split('-').map(Number);
+  if (!Number.isFinite(a)) return 5000;
+  if (!Number.isFinite(b) || b <= a) return a;
+  return a + Math.floor(Math.random() * (b - a + 1));
+}
+
 async function prosesAntrean({ batas = 20 } = {}) {
-  const jedaAntarPesan = Number(process.env.WA_JEDA_ANTAR_PESAN_MS ?? 3000);
   // Ambil pesan yang sudah waktunya dikirim dan "pesan" barisnya selama 5 menit (lease),
   // sehingga dua worker yang berjalan bersamaan tidak mengirim pesan yang sama.
   const ambil = await pool.query(
@@ -49,7 +57,7 @@ async function prosesAntrean({ batas = 20 } = {}) {
                 coba_lagi_pada = LOCALTIMESTAMP(0) + make_interval(mins => $4) WHERE id_notifikasi = $1`,
         [n.id_notifikasi, percobaan, k.galat, JEDA_ULANG_MENIT]);
     }
-    if (i < ambil.rows.length - 1 && jedaAntarPesan > 0) await tunggu(jedaAntarPesan); // jeda antarpesan
+    if (i < ambil.rows.length - 1) { const j = jedaAntarPesan(); if (j > 0) await tunggu(j); } // jeda antarpesan
   }
 
   await pool.query(

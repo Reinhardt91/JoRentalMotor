@@ -1,0 +1,39 @@
+
+[1] Info perpanjangan sewa demo (jatuh tempo besok 17.00, reservasi pelanggan lain mulai +4 hari 09.00)
+  OK    batas maksimal = 2 hari (dapat 2)
+  OK    belum ada pengajuan, harga harian 75.000
+  OK    pelanggan lain tidak bisa melihat sewa ini -> 404
+
+[2] Penolakan
+  OK    tambahan 3 hari melewati reservasi berikutnya -> 409
+  OK    tambahan 0 hari -> 400
+  OK    tambahan bukan angka -> 400
+  OK    pelanggan lain memperpanjang sewa orang -> 404
+
+[3] PARALEL: 5 permintaan perpanjangan bersamaan dari pelanggan yang sama (klik ganda / beberapa tab)
+  OK    hasil: [201,409,409,409,409] (harus satu 201, empat 409)
+  OK    status MENUNGGU_PEMBAYARAN, pembayaran PENDING
+  OK    biaya 2 hari = 150.000 (dapat 150000)
+  OK    order_id JRM-1-f3583c, QR tersedia
+  OK    jatuh tempo baru tetap pukul 17.00 (2026-11-13 17:00:00)
+  OK    hanya satu baris perpanjangan tersimpan (1)
+  OK    version sewa TIDAK naik saat pengajuan (masih 0)
+  OK    jatuh tempo sewa belum berubah sebelum dibayar
+
+[4] Status, info, dan pembatalan
+  OK    status dapat dipantau pemiliknya
+  OK    pelanggan lain -> 404
+  OK    info menampilkan pengajuan yang menunggu (bisa dilanjutkan)
+  OK    batal -> 200 (200)
+  OK    batal dua kali -> 409
+  OK    setelah dibatalkan boleh mengajukan lagi -> 201 (201)
+
+[5] QR kedaluwarsa dibereskan otomatis sebelum pengajuan baru
+  OK    pengajuan baru diterima setelah QR lama kedaluwarsa -> 201 (201)
+  OK    pengajuan lama ditandai KEDALUWARSA (KEDALUWARSA)
+
+[8] Sewa yang sudah selesai tidak bisa diperpanjang
+  OK    sewa SELESAI -> 409
+  OK    info menunjukkan maks 0 hari
+
+=== SEMUA LULUS ===

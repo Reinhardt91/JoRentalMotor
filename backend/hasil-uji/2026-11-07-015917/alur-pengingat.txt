@@ -1,0 +1,43 @@
+
+[1] Pukul 08.00 hari ini (2026-11-07): pengingat H-0 untuk sewa yang jatuh tempo hari ini
+  OK    job berjalan: 2 jadwal diproses, 1 pengingat dibuat.
+  OK    H-0 dibuat untuk sewa kedua (jatuh tempo hari ini 17.00)
+  OK    sewa demo (jatuh tempo besok) belum mendapat pengingat pada pukul 08.00
+  OK    isi pesan: "Halo Pelanggan Dua, sewa motor DB 1002 JR di Jo Rental Motor jatuh tem..."
+
+[2] Dijalankan ulang pada waktu yang sama
+  OK    tidak ada jadwal baru, tidak ada pengingat ganda
+
+[3] Pukul 17.00 hari ini: pengingat H-1 dan penandaan TERLAMBAT
+  OK    H-1 dibuat untuk sewa demo (jatuh tempo besok)
+  OK    sewa kedua tidak mendapat H-1
+  OK    sewa kedua lewat 17.00 tanpa pengembalian -> TERLAMBAT (version 0 -> 1)
+  OK    isi pesan: "Halo Pelanggan Uji, sewa motor DB 1001 JR di Jo Rental Motor akan jatu..."
+
+[4] Catatan jadwal hilang lalu job diproses ulang: tetap tidak ada pengingat ganda
+  OK    2 jadwal diproses ulang, jumlah pengingat tetap 2 (dijaga batasan unik)
+
+[5] PEMULIHAN: server mati sebelum 17.00, hidup kembali pukul 19.30 di hari yang sama
+  OK    jadwal yang terlewat (2026-11-07 17.00) dijalankan saat server hidup
+  OK    pengingat H-1 yang terlewat tetap dibuat
+  OK    scheduler_log mencatat jadwal terakhir yang selesai
+
+[6] PEMULIHAN lintas hari: server mati sejak 2 hari lalu, hidup pukul 09.00 hari ini
+  OK    3 jadwal terlewat diproses: 11-06 08:00 H0, 11-06 17:00 H1, 11-07 08:00 H0
+  OK    H-0 hari ini tetap dikirim (masih relevan)
+  OK    jadwal dari hari kemarin tidak menghasilkan pesan yang sudah tidak relevan
+
+[7] Batas pemulihan: catatan terakhir 10 hari lalu
+  OK    hanya memeriksa paling lama 3 hari ke belakang (6 jadwal)
+
+[8] PARALEL: dua pemicu bersamaan (misalnya cron dan pemulihan saat server menyala)
+  OK    jadwal 08.00 diproses tepat sekali (respons: 200 dan 200)
+
+[9] Pengingat dikirim oleh worker (mode simulasi)
+  OK    pengingat berstatus TERKIRIM (Antrean diproses: 1 terkirim, 0 dijadwalkan ulang, 0 gagal.)
+
+[10] Hak akses dan masukan
+  OK    pelanggan -> 403
+  OK    format waktu salah -> 400
+
+=== SEMUA LULUS ===

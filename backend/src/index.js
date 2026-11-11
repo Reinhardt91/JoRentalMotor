@@ -11,6 +11,7 @@ const webhookRoutes = require('./routes/webhook');
 const adminTambahanRoutes = require('./routes/adminTambahan');
 const jobsRoutes = require('./routes/jobs');
 const notifikasiRoutes = require('./routes/notifikasi');
+const kinerjaRoutes = require('./routes/kinerja');
 const { prosesAntrean } = require('./jobs/pengirim');
 const { pulihkanJadwal } = require('./jobs/pengingat');
 const { JAM_PENGINGAT_H1, JAM_PENGINGAT_H0 } = require('./config');
@@ -47,6 +48,7 @@ app.use('/api/admin', webhookRoutes.admin);
 app.use('/api/admin', adminTambahanRoutes);
 app.use('/api/admin', jobsRoutes);
 app.use('/api/admin', notifikasiRoutes);
+app.use('/api/admin', kinerjaRoutes);
 
 // Rute contoh untuk menguji pembatasan peran (boleh dihapus nanti)
 app.get('/api/admin/ping', authenticate, requireRole('ADMIN'), (req, res) => {

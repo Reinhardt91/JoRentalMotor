@@ -1,0 +1,5 @@
+
+[1] Siapkan satu kasus LUNAS_PERLU_TINDAKAN (sewa diakhiri, lalu pembayaran perpanjangan masuk)
+galat uji: TypeError: Cannot read properties of undefined (reading 'order_id')
+    at D:\JoRentalMotor\backend\tests\alur-admin-tambahan.js:35:18
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

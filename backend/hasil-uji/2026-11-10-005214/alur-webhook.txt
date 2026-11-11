@@ -1,0 +1,54 @@
+
+[1] Notifikasi PALSU ditolak tanpa mengubah data
+  OK    signature acak -> 403 (403)
+  OK    signature dari kunci lain -> 403 (403)
+  OK    nominal diubah setelah ditandatangani -> 403 (403)
+  OK    tanpa signature -> 403 (403)
+  OK    perpanjangan tetap MENUNGGU_PEMBAYARAN
+  OK    jatuh tempo tidak berubah
+  OK    keempat percobaan tercatat DITOLAK_SIGNATURE di webhook_log
+
+[2] Notifikasi sah tetapi data tidak cocok / belum lunas
+  OK    order_id tidak dikenal -> 200 tanpa efek (200)
+  OK    tercatat DITOLAK_DATA
+  OK    status pending -> tidak ada perubahan
+
+[3] PARALEL: 5 notifikasi settlement yang sama datang bersamaan (duplikat)
+  OK    semua dibalas 200: [200,200,200,200,200]
+  OK    webhook_log: DIPROSES, DUPLIKAT_DIABAIKAN, DUPLIKAT_DIABAIKAN, DUPLIKAT_DIABAIKAN, DUPLIKAT_DIABAIKAN
+  OK    perpanjangan LUNAS
+  OK    jatuh tempo diperbarui 2026-11-11 17:00:00 -> 2026-11-13 17:00:00
+  OK    version sewa naik tepat satu kali (0 -> 1)
+  OK    tepat satu konfirmasi WhatsApp masuk antrean
+  OK    notifikasi ulang (retry) kemudian -> DUPLIKAT_DIABAIKAN
+  OK    pembayaran is_processed = true, SETTLEMENT
+
+[4] Status selain lunas (sewa kedua, DB 1002)
+  OK    expire -> KEDALUWARSA
+  OK    pembayaran EXPIRE
+  OK    deny -> GAGAL
+  OK    cancel -> GAGAL
+  OK    jadwal sewa kedua tidak berubah
+
+[5] Konflik webhook vs edit admin (Optimistic Locking, deterministik)
+  OK    webhook tidak gagal walau version berubah: membaca ulang lalu LUNAS
+  OK    version = 2 (edit admin +1, webhook +1)
+  OK    jatuh tempo tetap diperbarui
+
+[6] Sewa diakhiri admin sebelum pembayaran masuk -> LUNAS_PERLU_TINDAKAN
+  OK    uang masuk tidak hilang jejak: LUNAS_PERLU_TINDAKAN (Sewa sudah diakhiri sebelum pembayaran diterima)
+  OK    sewa tetap SELESAI, jadwal tidak dibuka kembali
+
+[7] Jadwal bentrok: reservasi lain dibuat selama pelanggan menunggu membayar
+  OK    pelanggan lain berhasil memesan tanggal setelah jatuh tempo lama
+  OK    exclusion constraint menolak, LUNAS_PERLU_TINDAKAN (Jadwal bentrok dengan reservasi lain yang dibuat selama menunggu pembayaran)
+  OK    jatuh tempo dan version tidak berubah (dibatalkan ke savepoint)
+
+[8] Nominal tidak cocok dengan data pembayaran
+  OK    LUNAS_PERLU_TINDAKAN (Nominal tidak cocok: diterima 1000.00, seharusnya 90000.00)
+  OK    jatuh tempo tidak berubah
+
+[10] Semua notifikasi tercatat
+  OK    webhook_log berisi 19 baris untuk 19 notifikasi yang dikirim (setiap notifikasi tercatat, termasuk yang ditolak)
+
+=== SEMUA LULUS ===

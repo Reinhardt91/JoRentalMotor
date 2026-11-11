@@ -1,0 +1,23 @@
+
+[1] Siapkan data: 2 pesan terkirim, 1 pesan gagal setelah 3 percobaan, 1 pesan masih menunggu
+  OK    pesan ke nomor 0000 berakhir GAGAL setelah 3 percobaan
+
+[2] Daftar notifikasi gagal
+  OK    pesan gagal tampil di daftar bawaan (status GAGAL)
+  OK    jumlah percobaan dan alasan tampil: 3 kali, "Simulasi: nomor tidak terdaftar di WhatsApp"
+  OK    dilengkapi plat dan nama pelanggan (DB 1001 JR, Pelanggan Uji)
+  OK    tab Menunggu berisi 1 pesan
+  OK    tab Terkirim berisi 2 pesan dengan waktu kirim
+
+[3] Ringkasan
+  OK    menunggu 1, terkirim 2, gagal 1
+  OK    tingkat keberhasilan 7 hari = 66.7% (2 dari 3 yang selesai diproses)
+  OK    mode pengiriman ditampilkan: simulasi
+  OK    eksekusi terakhir job pengirim tampil
+
+[4] Hak akses dan masukan
+  OK    pelanggan -> 403
+  OK    ringkasan untuk pelanggan -> 403
+  OK    status tidak valid -> 400
+
+=== SEMUA LULUS ===

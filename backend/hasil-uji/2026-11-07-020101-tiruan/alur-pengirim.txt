@@ -1,0 +1,24 @@
+
+[1] Pengiriman pertama (mode simulasi; nomor berakhiran 0000 sengaja selalu gagal)
+  OK    hasil: Antrean diproses: 2 terkirim, 1 dijadwalkan ulang, 0 gagal.
+  OK    pesan 1 TERKIRIM, waktu kirim dan respons tercatat
+  OK    pesan gagal dijadwalkan ulang 15 menit lagi (percobaan 1, 15 menit)
+  OK    alasan gagal tercatat: "Simulasi: nomor tidak terdaftar di WhatsApp"
+
+[2] Belum waktunya dicoba ulang
+  OK    putaran berikutnya tidak memproses apa pun sebelum 15 menit
+
+[3] Percobaan ulang sampai batas 3 kali
+  OK    percobaan ke-2 gagal, masih PENDING
+  OK    percobaan ke-3 gagal, status GAGAL, tidak dijadwalkan lagi
+  OK    pesan GAGAL tidak pernah diambil lagi
+
+[4] PARALEL: dua worker berjalan bersamaan, setiap pesan dikirim tepat satu kali
+  OK    total diproses kedua worker = 6 (worker A 6, worker B 0)
+  OK    setiap pesan: tepat satu percobaan, TERKIRIM
+
+[5] Pencatatan dan hak akses
+  OK    setiap putaran yang memproses pesan tercatat di scheduler_log (4 putaran, 8 terkirim)
+  OK    pelanggan menjalankan job -> 403
+
+=== SEMUA LULUS ===

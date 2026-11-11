@@ -21,7 +21,8 @@ const notif = (orderId, gross, status, kunci = KUNCI, ubah = {}) => {
   b.signature_key = crypto.createHash('sha512').update(`${b.order_id}${b.status_code}${b.gross_amount}${kunci}`).digest('hex');
   return { ...b, ...ubah };
 };
-const kirim = (body) => call('POST', '/api/webhook/midtrans', null, body);
+let jumlahDikirim = 0; // jumlah notifikasi yang dikirim skrip ini, untuk dicocokkan dengan webhook_log
+const kirim = (body) => { jumlahDikirim++; return call('POST', '/api/webhook/midtrans', null, body); };
 const q1 = async (sql, p) => (await pool.query(sql, p)).rows[0];
 
 (async () => {
@@ -143,7 +144,7 @@ const q1 = async (sql, p) => (await pool.query(sql, p)).rows[0];
 
   console.log('\n[10] Semua notifikasi tercatat');
   const total = (await q1('select count(*)::int n from webhook_log')).n;
-  ok(total >= 20, `webhook_log berisi ${total} baris, termasuk yang ditolak`);
+  ok(total === jumlahDikirim, `webhook_log berisi ${total} baris untuk ${jumlahDikirim} notifikasi yang dikirim (setiap notifikasi tercatat, termasuk yang ditolak)`);
 
   console.log(`\n=== ${gagal === 0 ? 'SEMUA LULUS' : gagal + ' GAGAL'} ===`);
   await pool.end();
